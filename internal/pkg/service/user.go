@@ -2,6 +2,8 @@ package service
 
 import (
 	"net/http"
+	"time"
+	"encoding/json"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -14,7 +16,7 @@ import (
 
 // Token :
 func Token(c *gin.Context) {
-	c.JSON(http.StatusBadRequest, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"success": 1,
 		"data": "PeaGym",
 	})
@@ -35,6 +37,10 @@ func Register(c *gin.Context) {
 	}
 
 	user.Password = encryptPass([]byte(user.Password))
+	user.TSCreate = int32(time.Now().Unix())
+	user.TSUpdate = int32(time.Now().Unix())
+	user.Permission, _ = json.Marshal(map[string]string{"type": "user"})
+
 	data, err := entity.AddUser(*user)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -83,7 +89,7 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusForbidden, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"success": 1,
 		"data":    gin.H{
 			"uid": checkUser.ID,

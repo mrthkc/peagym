@@ -33,13 +33,13 @@ func GetUserByEmail(email string) *User {
 // AddUser : insert single user
 func AddUser(user User) (int, error) {
 	var lastInsert int64
-	insForm, err := DB.Prepare("INSERT INTO user (email, password, fullname, ts_last_login, ts_create, ts_update) VALUES (?, ?, ?, ?, ?, ?)")
+	insForm, err := DB.Prepare("INSERT INTO user (email, password, fullname, ts_last_login, ts_create, ts_update, permission) VALUES (?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		log.Error(err.Error())
 		return 0, err
 	}
 
-	result, err := insForm.Exec(user.Email, user.Password, user.Fullname, user.TSLastLogin, user.TSCreate, user.TSUpdate)
+	result, err := insForm.Exec(user.Email, user.Password, user.Fullname, user.TSLastLogin, user.TSCreate, user.TSUpdate, user.Permission)
 	if err != nil {
 		log.Error(err.Error())
 		return 0, err
