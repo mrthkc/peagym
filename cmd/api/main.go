@@ -19,8 +19,10 @@ func main() {
 
 	config.Env = *env
 	config.DBCred = config.Mysql.Local
+	config.Secret = config.JWT.Local.Secret
 	if config.Env == "prod" {
 		config.DBCred = config.Mysql.Prod
+		config.Secret = config.JWT.Prod.Secret
 	}
 
 	log.Info("SDK API started w/Env: " + *env)

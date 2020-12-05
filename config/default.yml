@@ -11,3 +11,9 @@ mysql:
     db: peacock
     user: user
     password: strong_pass
+
+jwt:
+  local:
+    secret: "test"
+  prod:
+    secret: "prod"

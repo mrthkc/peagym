@@ -25,6 +25,15 @@ type Config struct {
 			Password string `yaml:"password"`
 		} `yaml:"prod"`
 	} `yaml:"mysql"`
+	JWT struct {
+		Local struct {
+			Secret     string `yaml:"secret"`
+		} `yaml:"local"`
+		Prod struct {
+			Secret     string `yaml:"secret"`
+		} `yaml:"prod"`
+	} `yaml:"jwt"`
+
 	DBCred struct {
 		Host     string `yaml:"host"`
 		Port     string `yaml:"port"`
@@ -32,6 +41,7 @@ type Config struct {
 		User     string `yaml:"user"`
 		Password string `yaml:"password"`
 	}
+	Secret string
 }
 
 // NewConfig returns a new decoded Config struct
