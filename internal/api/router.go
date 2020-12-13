@@ -7,15 +7,16 @@ import (
 
 func route(r *gin.Engine) {
 	// Base
-	r.GET("/", service.BaseHandler)
+	r.GET("/api/", service.BaseHandler)
 
 	// Register
-	r.POST("/user", service.Register)
-	r.POST("/login", service.Login)
+	r.POST("/api/user", service.Register)
+	r.POST("/api/login", service.Login)
 
-	authorized := r.Group("/")
+	authorized := r.Group("/api/")
 	authorized.Use(service.JWTAuth())
 	{
-		authorized.GET("/token", service.Token)
+		authorized.GET("token", service.Token)
+		authorized.GET("user/:uid/profile", service.Profile)
 	}
 }

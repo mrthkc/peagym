@@ -30,6 +30,18 @@ func GetUserByEmail(email string) *User {
 	return user
 }
 
+// GetUserByID : returns single user
+func GetUserByID(id int64) *User {
+	user := new(User)
+	row := DB.QueryRow("SELECT * from user WHERE id=?", id)
+	err := row.Scan(&user.ID, &user.Email, &user.Password, &user.Fullname, &user.TSLastLogin, &user.TSCreate, &user.TSUpdate, &user.Permission)
+	if err != nil {
+		log.Errorln("User SELECT by ID Err: ", err)
+		return nil
+	}
+	return user
+}
+
 // AddUser : insert single user
 func AddUser(user User) (int, error) {
 	var lastInsert int64

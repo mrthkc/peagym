@@ -44,6 +44,11 @@ func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var bearer = "Bearer"
 		authHeader := c.GetHeader("Authorization")
+		if authHeader == "" {
+			c.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+
 		tokenString := authHeader[len(bearer):]
 		token, err := ValidateToken(tokenString)
 		if token.Valid {

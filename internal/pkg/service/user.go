@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 	"encoding/json"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -18,7 +19,7 @@ import (
 func Token(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"success": 1,
-		"data": "PeaGym",
+		"data": "Healthy",
 	})
 }
 
@@ -51,6 +52,34 @@ func Register(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"success": 1,
 		"data":    data,
+	})
+}
+
+// Profile : 
+func Profile(c *gin.Context) {
+	entity.DB = adapter.NewClient(Config.DBCred.Host, Config.DBCred.Port, Config.DBCred.DB, Config.DBCred.User, Config.DBCred.Password)
+	defer entity.DB.Close()
+	
+	uid, err := strconv.ParseInt(c.Param("uid"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": 0,
+		})
+		return
+	}
+	user := entity.GetUserByID(uid)
+	if user == nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": 0,
+			"data": "user not found",
+		})
+		return
+	}
+	user.Password = "-"
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": 1,
+		"data":    user,
 	})
 }
 
@@ -93,6 +122,7 @@ func Login(c *gin.Context) {
 		"success": 1,
 		"data":    gin.H{
 			"uid": checkUser.ID,
+			"uemail": checkUser.Email,
 			"token": token,
 		},
 	})
